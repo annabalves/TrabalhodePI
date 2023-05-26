@@ -1,18 +1,23 @@
 import React from 'react';
 import { Accordion, Button, Card, Col, Row, Table } from 'react-bootstrap';
 import { RiFileExcel2Line } from 'react-icons/ri';
-import { BarController, BarElement, CategoryScale, Chart, LinearScale, Title, Tooltip } from 'chart.js'; // Importe Tooltip
+import { BarController, BarElement, CategoryScale, Chart, LinearScale, Title, Tooltip } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import Pagina from '../../components/Pagina';
 import Rodape from '@/components/Rodape';
 import apiDeputados from '../../services/apiDeputados';
+import { format } from 'date-fns';
 
-
-Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip); // Registre Tooltip
+Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip);
 
 const Detalhes = ({ deputado, despesasDeputado }) => {
+  const formatarCPF = (cpf) => {
+    const cpfRegex = /^(\d{3})(\d{3})(\d{3})(\d{2})$/;
+    return cpf.replace(cpfRegex, '$1.$2.$3-$4');
+  };
+
   const exportarParaExcel = async () => {
     const despesasData = despesasDeputado.map((item) => [
       item.dataDocumento,
@@ -31,7 +36,10 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
     saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'despesas.xlsx');
   };
 
-  const despesasDatas = despesasDeputado.map((item) => item.dataDocumento);
+  const despesasDatas = despesasDeputado
+    .map((item) => format(new Date(item.dataDocumento), 'dd/MM/yyyy'))
+    .sort((a, b) => new Date(a) - new Date(b));
+
   const despesasValores = despesasDeputado.map((item) => item.valorDocumento);
 
   const data = {
@@ -58,8 +66,8 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
           <Row md={2}>
             <Card.Body>
               <p><b>Nome: </b>{deputado.nomeCivil}</p>
-              <p><b>CPF: </b> {deputado.cpf}</p>
-              <p><b>Data de Nascimento: </b> {deputado.dataNascimento}</p>
+              <p><b>CPF: </b> {formatarCPF(deputado.cpf)}</p>
+              <p><b>Data de Nascimento: </b> {format(new Date(deputado.dataNascimento), 'dd/MM/yyyy')}</p>
               <p><b>Naturalidade: </b>{deputado.municipioNascimento} - {deputado.ufNascimento}</p>
               <p><b>Escolaridade: </b>{deputado.escolaridade}</p>
               <p><b>Partido: </b>{deputado.ultimoStatus.siglaPartido}</p>
