@@ -1,0 +1,26 @@
+{
+  "name": "projfrontendpi",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-icons/all-files": "^4.1.0",
+    "axios": "^1.4.0",
+    "bootstrap": "^5.2.3",
+    "chart.js": "^4.3.0",
+    "file-saver": "^2.0.5",
+    "next": "13.4.3",
+    "react": "18.2.0",
+    "react-bootstrap": "^2.7.4",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.8.0",
+    "xlsx": "^0.16.9",
+    "xlsx-populate": "^1.21.0"
+  }
+}

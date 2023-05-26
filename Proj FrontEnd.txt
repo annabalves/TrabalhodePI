@@ -1,0 +1,121 @@
+PROJETO FRONTEND
+
+//GITHUB
+git pull -> Atualiza
+git push -> Manda para o Github
+git commit -> Manda do Github para o PC
+
+//CONFIGURANDO O GIT
+set your username: git config --global user.name "FIRST_NAME LAST_NAME"
+set your email address: git config --global user.email "MY_NAME@example.com"
+
+//ATUALIZA O NPM
+npm install -g npm@9.6.2
+npm -v(Visualiza a versão do npm)
+
+//IMPORTAR CSS(Site: https://react-bootstrap.github.io/)
+import 'bootstrap/dist/css/bootstrap.min.css' (No components Pagina)
+
+//CRIAR PROJETO
+npx create-next-app@latest introducao --use-npm --example https://github.com/vercel/next-learn/tree/master/basics/learn-starter(Site: https://nextjs.org/)
+npx create-next-app@latest introducao(Tudo "não" e no final Enter)
+npm install react-bootstrap bootstrap(Site: https://react-bootstrap.github.io/)
+npm i axios
+npm install react-icons
+npm install react-hook-form(Site: https://react-hook-form.com/ -> Get Started)
+npm install firebase
+npm install uuid
+
+//EXTENSÃO VSCODE
+ES7 React/Redux/React-Native snippets
+
+//EXECUTAR O PROJETO(Liga o Servidor)
+npm run dev
+
+//COMANDO PARA CRIAR COMPONENTES
+rcfe/racfe
+
+//LOOP ARRAY
+{carros.map(item => (<p>{item}</p>))}
+
+//REACT HOOKS(Opcional)
+const [filmes, setFilmes] = useState([])
+
+    useEffect(()=>{
+        
+        apiFilmes.get('/movie/popular').then(resultado => {
+            setFilmes(resultado.data.results)
+        })
+
+    }, [])
+
+//SERVICES API
+const { default: axios } = require("axios");
+
+const apiFilmes = axios.create({
+    baseURL: 'https://api.themoviedb.org/3',
+    headers: {
+        Authorization: 'Bearer ' + process.env.API_KEY_TMDB
+    }
+})
+
+export default apiFilmes
+
+//SITE API FILMES
+https://www.themoviedb.org/
+Google -> Public API github -> https://github.com/public-apis/public-apis
+
+//SERVER SIDE PROPS(BACKEND DO NEXT JS) -> Next JS(Site) -> Get Started -> getServerSideProps
+export async function getServerSideProps(context) {
+
+    const id = context.params.id -> (Essa variável "const id" vai na rota [id].js. Na rota index.js não precisa)
+    
+    const resultado = await apiFilmes.get('/movie/popular')
+    const filmes = resultado.data.results
+
+    return {
+        props: { filmes }, // will be passed to the page component as props
+    }
+}
+
+//COMPONENTS Pagina
+function Pagina(props) {
+  return (
+    <div>
+
+      <Cabecalho />
+      <div className='bg-secondary py-3 text-white text-center mb-3'>
+        <Container>
+          <h1>{props.titulo}</h1>
+        </Container>
+      </div>
+
+      <Container className='mb-5 pb-4'>
+        {props.children}
+      </Container>
+
+      <div style={{ width: '100%' }} className='bg-secondary position-fixed bottom-0 py-3 text-white text-center'>
+        <p>Todos os direitos reservados</p>
+      </div>
+
+    </div>
+  )
+}
+
+//COMPONENTS Cabecalho
+function Cabecalho() {
+    return (
+        <div>
+            <Navbar bg="dark" variant="dark">
+                <Container>
+                    <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+                    <Nav className="me-auto">
+                        <Nav.Link href="#home">Home</Nav.Link>
+                        <Nav.Link href="#features">Features</Nav.Link>
+                        <Nav.Link href="#pricing">Pricing</Nav.Link>
+                    </Nav>
+                </Container>
+            </Navbar>
+        </div>
+    )
+}
