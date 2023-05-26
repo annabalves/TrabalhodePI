@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 import Pagina from '../../components/Pagina';
 import Rodape from '@/components/Rodape';
 import apiDeputados from '../../services/apiDeputados';
-import { format } from 'date-fns';
+import { format } from 'date-fns'; 
 
 Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip);
 
