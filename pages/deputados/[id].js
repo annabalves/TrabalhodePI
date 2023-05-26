@@ -1,7 +1,7 @@
 import React from 'react';
 import { Accordion, Button, Card, Col, Row, Table } from 'react-bootstrap';
 import { RiFileExcel2Line } from 'react-icons/ri';
-import { BarController, BarElement, CategoryScale, Chart, LinearScale, Title } from 'chart.js';
+import { BarController, BarElement, CategoryScale, Chart, LinearScale, Title, Tooltip } from 'chart.js'; // Importe Tooltip
 import { Bar } from 'react-chartjs-2';
 import XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -9,7 +9,8 @@ import Pagina from '../../components/Pagina';
 import Rodape from '@/components/Rodape';
 import apiDeputados from '../../services/apiDeputados';
 
-Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title);
+
+Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip); // Registre Tooltip
 
 const Detalhes = ({ deputado, despesasDeputado }) => {
   const exportarParaExcel = async () => {
@@ -48,6 +49,7 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
 
   return (
     <Pagina>
+
       <Row>
         <Col>
           <Card.Img style={{ width: '300px' }} src={deputado.ultimoStatus.urlFoto} />
@@ -80,7 +82,7 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
           </Row>
         </Col>
         <div className='mt-5 variant=center'>
-          <Bar data={data} />
+          <Bar data={data} plugins={[{ plugin: Tooltip }]} /> {/* Adicione Tooltip */}
         </div>
       </Row>
 
