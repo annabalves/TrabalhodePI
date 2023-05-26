@@ -11,7 +11,7 @@ const Pagina = (props) => {
     return (
         <>
         <Helmet>
-        <title>POLÍTICA TRANSPARENTE | Portal dos Deputados </title> {/* Defina o título desejado */}
+        <title>POLÍTICA TRANSPARENTE  | Portal dos Deputados </title> {/* Defina o título desejado */}
       </Helmet>
             <Cabecalho/>
             <div className='bg-white py-3 text-black text-left mb-2 mt-5'>
