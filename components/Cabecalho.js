@@ -26,7 +26,7 @@ function Cabecalho() {
                                 <FaUser className="me-3" size={28} color='29569B' />
                                 Deputados
                             </Nav.Link>
-                            <Nav.Link href="#action2" className='spaced-link'>
+                            <Nav.Link href="/votacoes/" className='spaced-link'>
                                 <FaVoteYea className="me-3" size={28} color='29569B' />
                                 Votações
                             </Nav.Link>

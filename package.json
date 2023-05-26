@@ -13,6 +13,7 @@
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "chart.js": "^4.3.0",
+    "date-fns": "^2.30.0",
     "file-saver": "^2.0.5",
     "next": "13.4.3",
     "react": "18.2.0",
@@ -21,6 +22,7 @@
     "react-dom": "18.2.0",
     "react-helmet": "^6.1.0",
     "react-icons": "^4.8.0",
+    "react-input-mask": "^2.0.4",
     "xlsx": "^0.16.9",
     "xlsx-populate": "^1.21.0"
   }
