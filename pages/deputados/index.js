@@ -9,7 +9,8 @@ const Deputados = ({ deputados }) => {
   const [selectedFilter, setSelectedFilter] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
   const [unidadesFederativas, setUnidadesFederativas] = useState([]);
-
+  const [searchName, setSearchName] = useState('');
+  
   // Extrai as unidades federativas dos dados dos deputados
   useEffect(() => {
     const ufSet = new Set(deputados.map(item => item.siglaUf));
@@ -37,6 +38,19 @@ const Deputados = ({ deputados }) => {
   // Atualiza o valor selecionado para o filtro selecionado
   const handleValueSelect = (value) => {
     setSelectedValue(value);
+  };
+
+
+  const buscarDeputadosPorNome = async () => {
+    try {
+      const resultado = await apiDeputados.get(`/deputados?nome=${searchName}`);
+      const deputadosPorNome = resultado.data.dados;
+      // Atualize a lista de deputados com base na resposta da API
+      // Pode ser necessário adaptar a estrutura dos dados recebidos da API para corresponder à estrutura esperada pelo componente
+      setDeputados(deputadosPorNome);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

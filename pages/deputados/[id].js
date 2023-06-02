@@ -1,5 +1,5 @@
-import React from 'react';
-import { Accordion, Button, Card, Col, Row, Table } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Accordion, Button, Card, Col, Pagination, Row, Table } from 'react-bootstrap';
 import { RiFileExcel2Line } from 'react-icons/ri';
 import { BarController, BarElement, CategoryScale, Chart, LinearScale, Title, Tooltip } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 import Pagina from '../../components/Pagina';
 import Rodape from '@/components/Rodape';
 import apiDeputados from '../../services/apiDeputados';
-import { format } from 'date-fns'; 
+import { format, getYear, getMonth } from 'date-fns';
 
 Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip);
 
@@ -19,28 +19,94 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
   };
 
   const exportarParaExcel = async () => {
-    const despesasData = despesasDeputado.map((item) => [
+    let despesasFiltradasExcel = despesasDeputado;
+
+    // Aplica os filtros de ano e mês, se houver
+    if (filtroAno !== '') {
+      despesasFiltradasExcel = despesasFiltradasExcel.filter(
+        (item) => getYear(new Date(item.dataDocumento)) === parseInt(filtroAno)
+      );
+    }
+    if (filtroMes !== '') {
+      despesasFiltradasExcel = despesasFiltradasExcel.filter(
+        (item) => getMonth(new Date(item.dataDocumento)) === parseInt(filtroMes) - 1
+      );
+    }
+  
+    // Mapeia as despesas para o formato adequado para exportação
+    const despesasData = despesasFiltradasExcel.map((item) => [
       item.dataDocumento,
       item.tipoDespesa,
       `R$${item.valorDocumento}`,
     ]);
-
+  
+    // Calcula o valor total das despesas
+    const valorTotalDespesas = despesasFiltradasExcel.reduce((total, despesa) => total + despesa.valorDocumento, 0);
+  
+    // Adiciona a linha com o valor total ao array despesasData
+    despesasData.push(['', 'TOTAL', `R$${valorTotalDespesas.toFixed(2)}`]);
+  
+    // Cria a planilha do Excel
     const ws = XLSX.utils.aoa_to_sheet([
       ['Data', 'Descrição', 'Valor'],
       ...despesasData,
     ]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Despesas');
-
+  
+    // Salva o arquivo Excel
     const wbout = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
     saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'despesas.xlsx');
   };
 
-  const despesasDatas = despesasDeputado
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const despesasPorPagina = 15;
+  const [filtroAno, setFiltroAno] = useState('');
+  const [filtroMes, setFiltroMes] = useState('');
+
+  // Obter todos os anos disponíveis nas despesas
+  const anosDespesas = [...new Set(despesasDeputado.map((item) => getYear(new Date(item.dataDocumento))))];
+
+  // Obter todos os meses disponíveis nas despesas
+  const mesesDespesas = [...new Set(despesasDeputado.map((item) => format(new Date(item.dataDocumento), 'MMMM')))];
+
+  // Filtrar despesas por ano e mês
+  let despesasFiltradas = despesasDeputado;
+  if (filtroAno !== '') {
+    despesasFiltradas = despesasFiltradas.filter(
+      (item) => getYear(new Date(item.dataDocumento)) === parseInt(filtroAno)
+    );
+  }
+  if (filtroMes !== '') {
+    despesasFiltradas = despesasFiltradas.filter(
+      (item) => getMonth(new Date(item.dataDocumento)) === parseInt(filtroMes) - 1
+    );
+  }
+
+  const meses = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+
+  const calcularIndicesPagina = () => {
+    const totalDespesas = despesasFiltradas.length;
+    const totalPaginas = Math.ceil(totalDespesas / despesasPorPagina);
+
+    const indiceInicial = (paginaAtual - 1) * despesasPorPagina;
+    const indiceFinal = indiceInicial + despesasPorPagina;
+
+    return { totalPaginas, indiceInicial, indiceFinal };
+  };
+
+  const { indiceInicial, indiceFinal } = calcularIndicesPagina();
+
+  const despesasPaginadas = despesasFiltradas.slice(indiceInicial, indiceFinal);
+
+  const despesasDatas = despesasPaginadas
     .map((item) => format(new Date(item.dataDocumento), 'dd/MM/yyyy'))
     .sort((a, b) => new Date(a) - new Date(b));
 
-  const despesasValores = despesasDeputado.map((item) => item.valorDocumento);
+  const despesasValores = despesasPaginadas.map((item) => item.valorDocumento);
 
   const data = {
     labels: despesasDatas,
@@ -55,9 +121,10 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
     ],
   };
 
+  const totalDespesas = despesasPaginadas.reduce((total, item) => total + item.valorDocumento, 0);
+
   return (
     <Pagina>
-
       <Row>
         <Col>
           <Card.Img style={{ width: '300px' }} src={deputado.ultimoStatus.urlFoto} />
@@ -89,20 +156,55 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
             </Accordion>
           </Row>
         </Col>
-        <div className='mt-5 variant=center'>
-          <Bar data={data} plugins={[{ plugin: Tooltip }]} /> {/* Adicione Tooltip */}
+        <div className="mt-5 variant=center">
+          <Bar data={data} plugins={[{ plugin: Tooltip }]} />
         </div>
       </Row>
 
-      <Row md={2}>
-      </Row>
+      <Row md={2}></Row>
 
       <Row>
-        <Col md={12} className='pt-5 pb-10'>
+        <Col md={12} className="pt-5 pb-10">
           <Card>
             <Card.Header>Despesas</Card.Header>
             <Card.Body>
-              <Table striped>
+              <div className="d-flex justify-content-between">
+                <div>
+                  <label htmlFor="filtroAno">Ano:</label>
+                  <select
+                    id="filtroAno"
+                    value={filtroAno}
+                    onChange={(e) => setFiltroAno(e.target.value)}
+                  >
+                    <option value="">Todos</option>
+                    {anosDespesas.map((ano) => (
+                      <option key={ano} value={ano}>
+                        {ano}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="filtroMes">Mês:</label>
+                  <select
+                    id="filtroMes"
+                    value={filtroMes}
+                    onChange={(e) => setFiltroMes(e.target.value)}
+                  >
+                    <option value="">Todos</option>
+                    {meses.map((mes, index) => (
+                      <option key={index} value={index + 1}>
+                        {mes}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <Button variant="success" onClick={exportarParaExcel}>
+                  <RiFileExcel2Line />
+                  Exportar para Excel
+                </Button>
+              </div>
+              <Table responsive>
                 <thead>
                   <tr>
                     <th>Data</th>
@@ -111,44 +213,52 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {despesasDeputado.map(item => (
-                    <tr key={item.id}>
-                      <td>{item.dataDocumento}</td>
+                  {despesasPaginadas.map((item, index) => (
+                    <tr key={index}>
+                      <td>{format(new Date(item.dataDocumento), 'dd/MM/yyyy')}</td>
                       <td>{item.tipoDespesa}</td>
-                      <td> R${item.valorDocumento}</td>
+                      <td>R${item.valorDocumento}</td>
                     </tr>
                   ))}
+                  <tr>
+                  <td></td>
+                  <td><b>TOTAL</b></td>
+                  <td><b>R${totalDespesas.toFixed(2)}</b></td>
+                  <td></td>
+                  </tr>
                 </tbody>
               </Table>
-              <div className='d-flex justify-content-center'>
-                <Button
-                  variant="outline-primary"
-                  className='d-flex align-items-center'
-                  onClick={exportarParaExcel}
-                >
-                  <RiFileExcel2Line className="me-2" />
-                  Exportar
-                </Button>
+              <div className="d-flex justify-content-center">
+                <Pagination>
+                  {Array.from(Array(calcularIndicesPagina().totalPaginas).keys()).map((pagina) => (
+                    <Pagination.Item
+                      key={pagina}
+                      active={pagina + 1 === paginaAtual}
+                      onClick={() => setPaginaAtual(pagina + 1)}
+                    >
+                      {pagina + 1}
+                    </Pagination.Item>
+                  ))}
+                </Pagination>
               </div>
             </Card.Body>
           </Card>
         </Col>
       </Row>
-
       <Rodape />
     </Pagina>
-  )
-}
+  );
+};
 
 export default Detalhes;
 
 export async function getServerSideProps(context) {
   const id = context.params.id;
 
-  const resultado = await apiDeputados.get("/deputados/" + id);
+  const resultado = await apiDeputados.get('/deputados/' + id);
   const deputado = resultado.data.dados;
 
-  const despesas = await apiDeputados.get("/deputados/" + id + "/despesas");
+  const despesas = await apiDeputados.get('/deputados/' + id + '/despesas?itens=200');
   const despesasDeputado = despesas.data.dados;
 
   return {

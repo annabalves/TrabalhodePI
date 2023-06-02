@@ -2,6 +2,7 @@ import Pagina from '@/components/Pagina';
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Pagination, Row } from 'react-bootstrap';
 import axios from 'axios';
+import moment from 'moment';
 
 const Index = () => {
   const [noticias, setNoticias] = useState([]);
@@ -16,7 +17,7 @@ const Index = () => {
     const fetchNoticias = async () => {
       try {
         const response = await axios.get(
-          'https://newsapi.org/v2/everything?q=deputados&language=pt&apiKey=9f6af0220e884608992a91c7847f9f84'
+          'https://newsapi.org/v2/everything?q=deputados&language=pt&sortBy=publishedAt&pageSize=100&apiKey=9f6af0220e884608992a91c7847f9f84'
         );
         setNoticias(response.data.articles);
       } catch (error) {
@@ -31,9 +32,17 @@ const Index = () => {
     setPaginaAtual(numeroPagina);
   };
 
+  const formatarData = (data) => {
+    return moment(data).format('DD/MM/YYYY');
+  };
+
+  const formatarHora = (hora) => {
+    return moment(hora).format('HH:mm');
+  }
+
   return (
     <Pagina titulo='Notícias'>
-      <Row xs={1} md={2} lg={4} className="g-4 justify-content-center">
+      <Row lg={4} className="g-4 justify-content-center">
         {noticiasPaginadas.map((noticia, index) => (
           <Col key={index} className="mb-4">
             <Card style={{ height: '100%' }}>
@@ -41,6 +50,11 @@ const Index = () => {
               <Card.Body className="d-flex flex-column">
                 <Card.Title>{noticia.title}</Card.Title>
                 <Card.Text>{noticia.description}</Card.Text>
+                <p className="text-muted mt-auto">
+                  Atualizado em: {formatarData(noticia.publishedAt)}
+                  <br></br>
+                  Hora: {formatarHora(noticia.publishedAt)}
+                </p>
                 <div className="mt-auto">
                   <Button variant="primary" href={noticia.url}>Ver mais</Button>
                 </div>
