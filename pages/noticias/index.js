@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Pagination, Row } from 'react-bootstrap';
 import axios from 'axios';
 import moment from 'moment';
+import { Colors } from 'chart.js';
 
 const Index = () => {
   const [noticias, setNoticias] = useState([]);
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const noticiasPorPagina = 10;
+  const noticiasPorPagina = 12;
   const numeroDePaginas = Math.ceil(noticias.length / noticiasPorPagina);
   const indiceUltimaNoticia = paginaAtual * noticiasPorPagina;
   const indicePrimeiraNoticia = indiceUltimaNoticia - noticiasPorPagina;
@@ -41,28 +42,27 @@ const Index = () => {
   }
 
   return (
-    <Pagina titulo='Notícias'>
+    <Pagina titulo='FEED DE NOTÍCIAS' fonteTitulo='Roboto'>
       <Row lg={4} className="g-4 justify-content-center">
-        {noticiasPaginadas.map((noticia, index) => (
-          <Col key={index} className="mb-4">
-            <Card style={{ height: '100%' }}>
-              <Card.Img variant="top" src={noticia.urlToImage} />
-              <Card.Body className="d-flex flex-column">
-                <Card.Title>{noticia.title}</Card.Title>
-                <Card.Text>{noticia.description}</Card.Text>
-                <p className="text-muted mt-auto">
-                  Atualizado em: {formatarData(noticia.publishedAt)}
-                  <br></br>
-                  Hora: {formatarHora(noticia.publishedAt)}
-                </p>
-                <div className="mt-auto">
-                  <Button variant="primary" href={noticia.url}>Ver mais</Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+  {noticiasPaginadas.map((noticia, index) => (
+    <Col key={index} className="mb-4">
+      <Card style={{ height: '100%', border: '1px solid #17583B'}}>
+        <Card.Img variant="top" src={noticia.urlToImage} />
+        <Card.Body className="d-flex flex-column h-100 ">
+          <Card.Title>{noticia.title}</Card.Title>
+          <p className="text-muted mt-auto">
+            Atualizado em: {formatarData(noticia.publishedAt)}
+            <br />
+            Hora: {formatarHora(noticia.publishedAt)}
+          </p>
+          <div className="mt-auto">
+            <Button variant="outline-light" style={{ backgroundColor: '#17583B' }} href={noticia.url}>Ver mais</Button>
+          </div>
+        </Card.Body>
+      </Card>
+    </Col>
+  ))}
+</Row>
       <div className="d-flex justify-content-center mt-4">
         <Pagination>
           {Array.from({ length: numeroDePaginas }, (_, index) => (
@@ -70,6 +70,7 @@ const Index = () => {
               key={index + 1}
               active={index + 1 === paginaAtual}
               onClick={() => handlePaginaClicada(index + 1)}
+             
             >
               {index + 1}
             </Pagination.Item>

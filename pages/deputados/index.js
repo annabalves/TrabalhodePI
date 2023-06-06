@@ -9,10 +9,9 @@ const Deputados = ({ deputados }) => {
   const [selectedFilter, setSelectedFilter] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
   const [unidadesFederativas, setUnidadesFederativas] = useState([]);
-  const [searchName, setSearchName] = useState('');
-  
-  // Extrai as unidades federativas dos dados dos deputados
+
   useEffect(() => {
+    // Extrai as unidades federativas dos dados dos deputados
     const ufSet = new Set(deputados.map(item => item.siglaUf));
     const ufList = Array.from(ufSet).sort();
     setUnidadesFederativas(ufList);
@@ -40,45 +39,39 @@ const Deputados = ({ deputados }) => {
     setSelectedValue(value);
   };
 
-
-  const buscarDeputadosPorNome = async () => {
-    try {
-      const resultado = await apiDeputados.get(`/deputados?nome=${searchName}`);
-      const deputadosPorNome = resultado.data.dados;
-      // Atualize a lista de deputados com base na resposta da API
-      // Pode ser necessário adaptar a estrutura dos dados recebidos da API para corresponder à estrutura esperada pelo componente
-      setDeputados(deputadosPorNome);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
-    <Pagina titulo='Deputados'>
+    <Pagina titulo='DEPUTADOS' fonteTitulo='Roboto'>
       <Form className="d-flex">
-        <Form.Control
-          type="search"
-          placeholder="Search"
-          className="me-2"
-          aria-label="Search"
-          value={searchValue}
-          onChange={handleSearchChange}
-          style={{ marginBottom: "53px" }}
-        />
-        
-        <Dropdown onSelect={(eventKey) => handleFilterSelect(eventKey)}>
-          <Dropdown.Toggle variant="primary" id="dropdown-filter-button" style={{ marginRight: "10px", marginLeft: "2px" }}>
-            Filtrar
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item eventKey="">Todos</Dropdown.Item>
-            <Dropdown.Item eventKey="siglaUf">Estado</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+        <div className="col">
+          <Form.Control
+            type="search"
+            placeholder="Search"
+            className="me-2"
+            aria-label="Search"
+            value={searchValue}
+            onChange={handleSearchChange}
+            style={{ marginBottom: "53px", borderColor: "#17583B" }}
+          />
+        </div>
+
+        <div className="col-auto">
+          <Dropdown onSelect={(eventKey) => handleFilterSelect(eventKey)}>
+            <Dropdown.Toggle
+              id="dropdown-filter-button"
+              style={{ marginRight: "10px", marginLeft: "2px", backgroundColor: "#17583B" }}
+            >
+              Filtrar
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="">Todos</Dropdown.Item>
+              <Dropdown.Item eventKey="siglaUf">Estado</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
 
         {selectedFilter !== '' && (
           <Dropdown onSelect={(eventKey) => handleValueSelect(eventKey)}>
-            <Dropdown.Toggle variant="primary" id="dropdown-value-button">
+            <Dropdown.Toggle style={{ backgroundColor: '#17583B' }} id="dropdown-value-button">
               Selecionar Valor
             </Dropdown.Toggle>
             <Dropdown.Menu>
@@ -96,7 +89,7 @@ const Deputados = ({ deputados }) => {
 
         {selectedFilter !== '' && (
           <div style={{ marginBottom: "30px", marginLeft: "10px" }}>
-            <Button variant="outline-primary" onClick={() => setSelectedFilter('')}>
+            <Button variant="outline-light" style={{ backgroundColor: '#17583B' }} onClick={() => setSelectedFilter('')}>
               Limpar Filtro
             </Button>
           </div>
@@ -106,17 +99,18 @@ const Deputados = ({ deputados }) => {
       <Row md={4} xs={1} className="g-4">
         {filteredDeputados.map(item => (
           <Col key={item.id}>
-            <Card>
+            <Card style={{ backgroundColor: '#17583B' }}>
               <Link href={'/deputados/' + item.id}>
                 <Card.Img src={item.urlFoto} />
               </Link>
-              <Card.Body>
-                <Card.Title>{item.nome}</Card.Title>
+              <Card.Body style={{ backgroundColor: '#17583B', fontFamily: 'initial' }} className="d-flex align-items-center justify-content-center">
+                <Card.Title className="text-white text-center">{item.nome}</Card.Title>
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
+
     </Pagina>
   );
 };

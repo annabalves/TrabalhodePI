@@ -8,7 +8,7 @@ function Cabecalho() {
     return (
         <div>
             {[false].map((expand) => (
-                <Navbar key={expand} bg="primary" expand={expand} className="mb-3" variant="dark">
+                <Navbar key={expand} style={{ backgroundColor: '#17583B'}} expand={expand} className="mb-3" variant="dark">
                     <Container fluid>
                         <Navbar.Toggle aria-controls={``} />
                         <Navbar.Brand href="#home" style={{paddingLeft:50}}>POLÍTICA TRANSPARENTE</Navbar.Brand>
@@ -19,15 +19,15 @@ function Cabecalho() {
                         <Offcanvas.Body responsive="lg">
                             <Nav className="justify-content-end flex-grow-1 pe-3">
                             <Nav.Link href="/noticias/" className='spaced-link'>
-                                <FaNewspaper className="me-3" size={28} color='29569B' />
+                                <FaNewspaper className="me-3" size={28} color='17583B' />
                                 Notícias
                             </Nav.Link>
                             <Nav.Link href="/deputados/">
-                                <FaUser className="me-3" size={28} color='29569B' />
+                                <FaUser className="me-3" size={28} color='17583B' />
                                 Deputados
                             </Nav.Link>
                             <Nav.Link href="/votacoes/" className='spaced-link'>
-                                <FaVoteYea className="me-3" size={28} color='29569B' />
+                                <FaVoteYea className="me-3" size={28} color='17583B' />
                                 Votações
                             </Nav.Link>
                             </Nav>

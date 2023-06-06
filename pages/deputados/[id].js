@@ -114,8 +114,8 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
       {
         label: 'Despesas',
         data: despesasValores,
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: ' #17583B',
+        borderColor: '#25855A',
         borderWidth: 1,
       },
     ],
@@ -127,7 +127,7 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
     <Pagina>
       <Row>
         <Col>
-          <Card.Img style={{ width: '300px' }} src={deputado.ultimoStatus.urlFoto} />
+          <Card.Img style={{ width: '300px', border: '5px solid #17583B' }} src={deputado.ultimoStatus.urlFoto} />
         </Col>
         <Col md={8}>
           <Row md={2}>
@@ -166,8 +166,8 @@ const Detalhes = ({ deputado, despesasDeputado }) => {
       <Row>
         <Col md={12} className="pt-5 pb-10">
           <Card>
-            <Card.Header>Despesas</Card.Header>
-            <Card.Body>
+            <Card.Header style={{ border: '2px solid #17583B', backgroundColor: '#17583B', color: 'white'}}>Despesas</Card.Header>
+            <Card.Body style={{ border: '1px solid #17583B' }}>
               <div className="d-flex justify-content-between">
                 <div>
                   <label htmlFor="filtroAno">Ano:</label>

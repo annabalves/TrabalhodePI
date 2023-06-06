@@ -1,29 +1,28 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react'
+import React from 'react';
 import { Container } from 'react-bootstrap';
 import Cabecalho from './Cabecalho';
 import { Helmet } from 'react-helmet';
 
+const Pagina = ({ titulo, fonteTitulo, children }) => {
+  const estiloTitulo = {
+    fontFamily: fonteTitulo || 'inherit',
+  };
 
-
-const Pagina = (props) => {
-
-    return (
-        <>
-        <Helmet>
-        <title>POLÍTICA TRANSPARENTE  | Portal dos Deputados </title> {/* Defina o título desejado */}
+  return (
+    <>
+      <Helmet>
+        <title>POLÍTICA TRANSPARENTE | Portal dos Deputados</title>
       </Helmet>
-            <Cabecalho/>
-            <div className='bg-white py-3 text-black text-left mb-2 mt-5'>
-                <Container>
-                    <h1>{props.titulo}</h1>
-                </Container>
-            </div>
-            <Container>
-                {props.children}
-            </Container>
-        </>
-    )
-}
+      <Cabecalho />
+      <div className="bg-white py-3 text-black text-left mb-2 mt-5">
+        <Container>
+          <h1 style={estiloTitulo}>{titulo}</h1>
+        </Container>
+      </div>
+      <Container>{children}</Container>
+    </>
+  );
+};
 
-export default Pagina
+export default Pagina;
