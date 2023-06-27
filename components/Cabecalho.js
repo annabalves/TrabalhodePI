@@ -1,7 +1,7 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap'
-import { FaMoneyBill, FaNewspaper, FaUser, FaVoteYea } from 'react-icons/fa';
+import { FaCalendar, FaFlag, FaNewspaper, FaSearch, FaUser } from 'react-icons/fa';
 
 
 function Cabecalho() {
@@ -26,9 +26,9 @@ function Cabecalho() {
                                 <FaUser className="me-3" size={28} color='17583B' />
                                 Deputados
                             </Nav.Link>
-                            <Nav.Link href="/votacoes/" className='spaced-link'>
-                                <FaVoteYea className="me-3" size={28} color='17583B' />
-                                Votações
+                            <Nav.Link href="/partidos/" className='spaced-link'>
+                                <FaFlag className="me-3" size={25} color='17583B' />
+                                Partidos
                             </Nav.Link>
                             </Nav>
                         </Offcanvas.Body>

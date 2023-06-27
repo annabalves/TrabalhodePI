@@ -23,6 +23,9 @@ const Deputados = ({ deputados }) => {
     (selectedFilter === '' || item[selectedFilter] === selectedValue || selectedValue === '')
   );
 
+  // Verifica se todos os 500 deputados estão sendo exibidos
+  const isExibindoTodosDeputados = filteredDeputados.length === deputados.length;
+
   // Atualiza o valor da pesquisa quando o usuário digita no campo de pesquisa
   const handleSearchChange = (e) => {
     setSearchValue(e.target.value);
@@ -32,15 +35,41 @@ const Deputados = ({ deputados }) => {
   const handleFilterSelect = (filter) => {
     setSelectedFilter(filter);
     setSelectedValue('');
+
+    fetchDeputados(searchValue, filter, '');
   };
 
   // Atualiza o valor selecionado para o filtro selecionado
   const handleValueSelect = (value) => {
     setSelectedValue(value);
+
+    fetchDeputados(searchValue, selectedFilter, value);
   };
 
+  const fetchDeputados = async (searchValue, filter, value) => {
+    try {
+      const resultado = await apiDeputados.get('/deputados', {
+        params: {
+          nome: searchValue,
+          [filter]: value
+        }
+      });
+
+  const deputadosPesquisados = resultado.data.dados;
+  setDeputados(deputadosPesquisados);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   return (
     <Pagina titulo='DEPUTADOS' fonteTitulo='Roboto'>
+      {isExibindoTodosDeputados && (
+        <div className="alert alert-success" role="alert">
+          Todos os deputados estão sendo exibidos.
+        </div>
+      )}
+
       <Form className="d-flex">
         <div className="col">
           <Form.Control
@@ -72,7 +101,7 @@ const Deputados = ({ deputados }) => {
         {selectedFilter !== '' && (
           <Dropdown onSelect={(eventKey) => handleValueSelect(eventKey)}>
             <Dropdown.Toggle style={{ backgroundColor: '#17583B' }} id="dropdown-value-button">
-              Selecionar Valor
+              Selecionar Estado
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {unidadesFederativas.map(item => (
@@ -110,7 +139,6 @@ const Deputados = ({ deputados }) => {
           </Col>
         ))}
       </Row>
-
     </Pagina>
   );
 };

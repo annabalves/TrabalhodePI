@@ -4,7 +4,7 @@ import React from 'react'
 const inicio = () => {
   return (
     <Pagina>
-      
+      oi
     </Pagina>
   )
 }

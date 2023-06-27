@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Pagination, Row } from 'react-bootstrap';
 import axios from 'axios';
 import moment from 'moment';
-import { Colors } from 'chart.js';
+
 
 const Index = () => {
   const [noticias, setNoticias] = useState([]);

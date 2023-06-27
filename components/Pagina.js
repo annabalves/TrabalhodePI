@@ -15,7 +15,7 @@ const Pagina = ({ titulo, fonteTitulo, children }) => {
         <title>POLÍTICA TRANSPARENTE | Portal dos Deputados</title>
       </Helmet>
       <Cabecalho />
-      <div className="bg-white py-3 text-black text-left mb-2 mt-5">
+      <div className="bg-white py-3 text-black text-left mb-2 mt-5 ">
         <Container>
           <h1 style={estiloTitulo}>{titulo}</h1>
         </Container>
