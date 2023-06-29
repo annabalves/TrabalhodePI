@@ -11,7 +11,7 @@ function Cabecalho() {
                 <Navbar key={expand} style={{ backgroundColor: '#17583B'}} expand={expand} className="mb-3" variant="dark">
                     <Container fluid>
                         <Navbar.Toggle aria-controls={``} />
-                        <Navbar.Brand href="#home" style={{paddingLeft:50}}>POLÍTICA TRANSPARENTE</Navbar.Brand>
+                        <Navbar.Brand href="/" style={{paddingLeft:50}}>POLÍTICA TRANSPARENTE</Navbar.Brand>
                         <Nav className="me-auto">
                         <Navbar.Text href="#features"> | PORTAL DOS DEPUTADOS</Navbar.Text>
                         </Nav>
